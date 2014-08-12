@@ -1,12 +1,27 @@
 *.class
 
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
-
 # Package Files #
-*.jar
 *.war
 *.ear
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
+# IntelliJ Project #
+.idea/
+*.iml
+*.isw
+
+# Maven #
+target/
+log/
+
+# Tomcat7 #
+ROOT/
+host-manager/
+manager/
+
+# log file #
+*.log
+
+
+# Bower Components #
+
+*node_modules

@@ -1,0 +1,791 @@
+<#include "/layout/layout-logan.html"/>
+<style>
+.s2{width:100%; height:100%; text-align:center;"}
+
+</style>
+<@layout>
+<div class="row">
+	<div class="col-lg-12">
+		<h2 class="page-header">History Report</h2>
+	</div><!-- /.col-lg-12 -->
+</div>
+<div class="row">
+	<div class="col-lg-12">
+		<div id="con_1" style="margin:0px auto;width:95%;height:820px;"><div id="container0" class="s2">chart0</div></div>
+	</div><!-- /.col-lg-12 -->
+</div>
+
+
+</@layout>
+<script  type="text/javascript" charset="utf-8">
+Highcharts.setOptions({
+  global: {
+	useUTC: false
+  }
+});
+
+var chartGraph;
+
+var chartData1 = []; //Central west 
+var chartData2 = []; //Terminal B 
+var chartData3 = []; //Terminal E 
+var chartData4 = []; //Economy lot 
+var chartData0 = []; //overall data 
+var chartData0UB = 0; //overall Bound 
+var chartData0LB = 0; //overall lowerbound 
+var chartData1UB = 0; //overall Bound 
+var chartData1LB = 0; //overall lowerbound 
+var chartData2UB = 0; //overall Bound 
+var chartData2LB = 0; //overall lowerbound 
+var chartData3UB = 0; //overall Bound 
+var chartData3LB = 0; //overall lowerbound 
+var chartData4UB = 0; //overall Bound 
+var chartData4LB = 0; //overall lowerbound 
+
+
+
+var chart0Color = Highcharts.getOptions().colors[0];
+var chart1Color = Highcharts.getOptions().colors[1];
+var chart2Color = Highcharts.getOptions().colors[3];
+var chart3Color = Highcharts.getOptions().colors[8];
+var chart4Color = Highcharts.getOptions().colors[5];
+
+
+
+//highchart data 
+var chartData0Occ = [];
+var chartData0Entry = [];
+var chartData0Exit = [];
+var chartData1Occ = [];
+var chartData1Entry = [];
+var chartData1Exit = [];
+var chartData2Occ = [];
+var chartData2Entry = [];
+var chartData2Exit = [];
+var chartData3Occ = [];
+var chartData3Entry = [];
+var chartData3Exit = [];
+var chartData4Occ = [];
+var chartData4Entry = [];
+var chartData4Exit = [];
+
+//set the allowed units for data grouping
+var groupingUnits = [['week', [1]], ['month', [1, 2, 3, 4, 6]]];
+
+generateChartDataJSON();
+
+
+
+function generateChartDataJSON() {
+
+  var garageName = ["all", "centralwest", "terminalb", "terminale", "economylot"];
+
+  var date = [];
+
+
+  //yyyy-MM-dd HH:mm:ss
+  datef = '${from}';
+
+  datet = '${to}';
+
+  
+  $.ajaxSettings.async = false;
+  $.getJSON('http://smarking.net:8080/garage/history?garage=' + garageName[0] + '&from=' + datef + '&to=' + datet, function (data) {
+
+	chartData0Occ = getArrayJSON(data, 1);
+	chartData0Entry = getArrayJSON(data, 2);
+	chartData0Exit = getArrayJSON(data, 3);
+  });
+
+  $.getJSON('http://smarking.net:8080/garage/history?garage=' + garageName[1] + '&from=' + datef + '&to=' + datet, function (data) {
+
+	chartData1Occ = getArrayJSON(data, 1);
+	chartData1Entry = getArrayJSON(data, 2);
+	chartData1Exit = getArrayJSON(data, 3);
+  });
+
+  $.getJSON('http://smarking.net:8080/garage/history?garage=' + garageName[2] + '&from=' + datef + '&to=' + datet, function (data) {
+
+	chartData2Occ = getArrayJSON(data, 1);
+	chartData2Entry = getArrayJSON(data, 2);
+	chartData2Exit = getArrayJSON(data, 3);
+  });
+
+  $.getJSON('http://smarking.net:8080/garage/history?garage=' + garageName[3] + '&from=' + datef + '&to=' + datet, function (data) {
+
+	chartData3Occ = getArrayJSON(data, 1);
+	chartData3Entry = getArrayJSON(data, 2);
+	chartData3Exit = getArrayJSON(data, 3);
+  });
+
+  $.getJSON('http://smarking.net:8080/garage/history?garage=' + garageName[4] + '&from=' + datef + '&to=' + datet, function (data) {
+
+	chartData4Occ = getArrayJSON(data, 1);
+	chartData4Entry = getArrayJSON(data, 2);
+	chartData4Exit = getArrayJSON(data, 3);
+  });
+
+
+}
+
+
+
+function getArrayJSON(data, pos) {
+
+  var tem = [];
+
+  for (var i = 0; i < data.length; i++) {
+	tem[i] = [data[i][0], data[i][pos]];
+  };
+  return tem;
+}
+
+
+$(document).ready(function () {
+
+  var seriesOptions = [],
+	yAxisOptions = [],
+	seriesCounter = 0,
+	namesJASON = ['Overall', 'Central West', 'Terminal B', 'Terminal E', 'Economy Lot'],
+	colors = Highcharts.getOptions().colors;
+
+  /**
+   * Grid-light theme for Highcharts JS
+   * @author Torstein Honsi
+   */
+
+  // Load the fonts
+  Highcharts.createElement('link', {
+	href: 'http://fonts.googleapis.com/css?family=Dosis:400,600',
+	rel: 'stylesheet',
+	type: 'text/css'
+  }, null, document.getElementsByTagName('head')[0]);
+
+  Highcharts.theme = {
+	colors: ["#7cb5ec", "#f7a35c", "#90ee7e", "#7798BF", "#aaeeee", "#ff0066", "#eeaaee",
+	"#55BF3B", "#DF5353", "#7798BF", "#aaeeee"],
+	chart: {
+	  backgroundColor: null,
+	  style: {
+		fontFamily: "Dosis, sans-serif"
+	  }
+	},
+	title: {
+	  style: {
+		fontSize: '16px',
+		fontWeight: 'bold',
+		textTransform: 'uppercase'
+	  }
+	},
+	tooltip: {
+	  borderWidth: 0,
+	  backgroundColor: 'rgba(219,219,216,0.8)',
+	  shadow: false
+	},
+	legend: {
+	  itemStyle: {
+		fontWeight: 'bold',
+		fontSize: '13px'
+	  }
+	},
+	xAxis: {
+	  gridLineWidth: 1,
+	  labels: {
+		style: {
+		  fontSize: '12px'
+		}
+	  }
+	},
+	yAxis: {
+	  minorTickInterval: 'auto',
+	  title: {
+		style: {
+		  textTransform: 'uppercase'
+		}
+	  },
+	  labels: {
+		style: {
+		  fontSize: '12px'
+		}
+	  }
+	},
+	plotOptions: {
+	  series: {
+		animation: {
+		  duration: 1000,
+		  easing: 'swing'
+		}
+	  }
+	},
+
+
+	// General
+	background2: '#F0F0EA'
+
+  };
+
+  // Apply the theme
+  //Highcharts.setOptions(Highcharts.theme);
+
+  createChart(0);
+
+
+  // create the chart when all data is loaded 
+  function createChart(chartNum) {
+
+
+	//chart 0 for overall data 
+	$('#container0').highcharts('StockChart', {
+		chart: {
+		  zoomType: 'x',
+
+		},
+
+		exporting: {
+		  buttons: {
+			contextButton: {
+			  enabled: false
+			},
+			exportButton: {
+			  text: 'Export',
+			  theme: {
+				'stroke-width': 1,
+				stroke: 'silver',
+				r: 3,
+
+			  },
+
+			  menuItems: Highcharts.getOptions().exporting.buttons.contextButton.menuItems.splice(0)
+			},
+
+			sourceWidth: 1000,
+			sourceHeight: 820,
+
+
+		  }
+		},
+
+
+		legend: {
+		  enabled: true,
+		  align: 'center',
+		  backgroundColor: '#FFFFFF',
+		  borderColor: 'black',
+		  //shadow: true,
+		  borderWidth: 1,
+		  layout: 'horizontal',
+		  verticalAlign: 'top',
+		  y: -10,
+		  float: true,
+
+		},
+
+
+
+		credits: {
+		  enabled: false
+		},
+
+
+
+		rangeSelector: {
+		  inputEnabled: $('#container0').width() > 480,
+		  selected: 0,
+		  buttons: [{
+			type: 'day',
+			count: 1,
+			text: '1d'
+   }, {
+			type: 'week',
+			count: 1,
+			text: '1w'
+   }, {
+			type: 'month',
+			count: 1,
+			text: '1m'
+   }, {
+			type: 'month',
+			count: 3,
+			text: '3m'
+   }, {
+			type: 'all',
+			text: 'All'
+   }],
+
+		  inputBoxWidth: 115,
+		  inputDateFormat: "%b %e,%Y %H:%M",
+		  inputEditDateFormat: "%m-%d-%Y %H:%M",
+		},
+
+
+
+		xAxis: {
+		  //Min show range, problem may exist that if you input date with duration less than the set minRange
+		  //The start date or the end date may change 
+		  type: 'datetime',
+		  //mini show range is 6 hours 
+		  minRange: 6 * 3600 * 1000,
+
+
+		  //Modify x axis make sure not show year information
+		  dateTimeLabelFormats: {
+			second: '%Y-%m-%d<br/>%H:%M:%S',
+			minute: '%Y-%m-%d<br/>%H:%M',
+			hour: '%Y-%m-%d<br/>%H:%M',
+			day: '%Y<br/>%m-%d',
+			week: '%Y<br/>%m-%d',
+			month: '%Y-%m',
+			year: '%Y'
+		  }
+		},
+
+		yAxis: [{
+			top: '0%',
+			height: '65%',
+			//title: {
+			//	text: 'Occupancy'
+			//},
+
+			labels: {
+			  align: 'right',
+			  x: -3
+			},
+
+			floor: 0,
+
+			dateTimeLabelFormats: {
+			  second: '%Y-%m-%d<br/>%H:%M:%S',
+			  minute: '%Y-%m-%d<br/>%H:%M',
+			  hour: '%Y-%m-%d<br/>%H:%M',
+			  day: '%Y<br/>%m-%d',
+			  week: '%Y<br/>%m-%d',
+			  month: '%Y-%m',
+			  year: '%Y'
+			}
+
+
+  },
+		  {
+
+			labels: {
+			  align: 'right',
+			  x: -3
+			},
+
+			floor: 0,
+			top: '67%',
+			height: '15%',
+			offset: 0,
+
+  },
+		  {
+
+			labels: {
+			  align: 'right',
+			  x: -3
+			},
+			ceiling: 2000,
+			floor: 0,
+			top: '85%',
+			height: '15%',
+			offset: 0,
+  }
+  ],
+
+
+
+
+		tooltip: {
+		  valueDecimals: 0,
+		  style: {
+			fontSize: '12pt',
+			padding: 5
+		  },
+
+		  useHTML: true,
+		  headerFormat: '<big>{point.key}</big><table>',
+		  pointFormat: '<tr><td style="color: {series.color}">{series.name}: </td>' +
+			'<td style="text-align: right"><b>{point.y}</b></td></tr>',
+		  footerFormat: '</table>',
+
+		  dateTimeLabelFormats: {
+			second: '%Y-%m-%d<br/>%H:%M:%S',
+			minute: '%Y-%m-%d<br/>%H:%M',
+			hour: '%Y-%m-%d<br/>%H:%M',
+			day: '%Y<br/>%m-%d',
+			week: '%Y<br/>%m-%d',
+			month: '%Y-%m',
+			year: '%Y'
+		  },
+		},
+
+
+
+		series: [{
+			name: "Overall",
+			color: chart0Color,
+			data: chartData0Occ,
+
+			dataGrouping: {
+			  enabled: false
+			},
+
+			marker: {
+			  symbol: 'circle'
+			},
+
+			//type: "area",
+
+			//events handle 
+			events: {
+			  legendItemClick: function (event) {
+				this.visible ?
+				  this.chart.get('c0Entry').hide() :
+				  this.chart.get('c0Entry').show();
+				this.visible ?
+				  this.chart.get('c0Exit').hide() :
+				  this.chart.get('c0Exit').show();
+			  }
+			}
+
+  }, {
+			name: "Central west",
+			data: chartData1Occ,
+			color: chart1Color,
+			//type: "area",
+			visible: false,
+
+			dataGrouping: {
+			  enabled: false
+			},
+
+
+			marker: {
+			  symbol: 'square'
+			},
+
+
+			events: {
+			  legendItemClick: function (event) {
+				this.visible ?
+				  this.chart.get('c1Entry').hide() :
+				  this.chart.get('c1Entry').show();
+				this.visible ?
+				  this.chart.get('c1Exit').hide() :
+				  this.chart.get('c1Exit').show();
+			  }
+			}
+  }, {
+			name: "Terminal B",
+			data: chartData2Occ,
+			color: chart2Color,
+			//type: "area",
+			visible: false,
+
+			dataGrouping: {
+			  enabled: false
+			},
+
+			fillColor: {
+			  linearGradient: {
+				x1: 0,
+				y1: 0,
+				x2: 0,
+				y2: 1
+			  },
+			  stops: [
+	 [0, chart2Color],
+	 [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+	]
+			},
+
+			marker: {
+			  symbol: 'diamond'
+			},
+
+			events: {
+			  legendItemClick: function (event) {
+				this.visible ?
+				  this.chart.get('c2Entry').hide() :
+				  this.chart.get('c2Entry').show();
+				this.visible ?
+				  this.chart.get('c2Exit').hide() :
+				  this.chart.get('c2Exit').show();
+			  }
+			}
+  }, {
+			name: "Terminal E",
+			data: chartData3Occ,
+			color: chart3Color,
+			//type: "area",
+			visible: false,
+
+			dataGrouping: {
+			  enabled: false
+			},
+
+			marker: {
+			  symbol: 'triangle'
+			},
+
+			events: {
+			  legendItemClick: function (event) {
+				this.visible ?
+				  this.chart.get('c3Entry').hide() :
+				  this.chart.get('c3Entry').show();
+				this.visible ?
+				  this.chart.get('c3Exit').hide() :
+				  this.chart.get('c3Exit').show();
+			  }
+			}
+  }, {
+			name: "Economy lot",
+			data: chartData4Occ,
+			color: chart4Color,
+			//type: "area",
+			visible: false,
+
+			dataGrouping: {
+			  enabled: false
+			},
+
+			marker: {
+			  symbol: 'triangle-down'
+			},
+
+			events: {
+			  legendItemClick: function (event) {
+				this.visible ?
+				  this.chart.get('c4Entry').hide() :
+				  this.chart.get('c4Entry').show();
+				this.visible ?
+				  this.chart.get('c4Exit').hide() :
+				  this.chart.get('c4Exit').show();
+			  }
+			}
+  }, {
+			name: "Overall Entry",
+			color: chart0Color,
+			id: "c0Entry",
+			type: "area",
+			data: chartData0Entry,
+			showInLegend: false,
+			yAxis: 1,
+
+			marker: {
+			  symbol: 'circle'
+			},
+
+			dataGrouping: {
+			  enabled: false
+			},
+
+  }, {
+			name: "Overall Exit",
+			color: chart0Color,
+			type: "area",
+			id: "c0Exit",
+			data: chartData0Exit,
+			showInLegend: false,
+			yAxis: 2,
+
+			marker: {
+			  symbol: 'circle'
+			},
+
+			dataGrouping: {
+			  enabled: false
+			},
+
+  },
+
+  //Sync the legend with the occupancy 
+
+		  {
+			name: "Central west Entry",
+			color: chart1Color,
+			//type: "area",
+			visible: false,
+			id: "c1Entry",
+			data: chartData1Entry,
+			showInLegend: false,
+			yAxis: 1,
+
+			marker: {
+			  symbol: 'square'
+			},
+
+			dataGrouping: {
+			  enabled: false
+			},
+
+  }, {
+			name: "Central west Exit",
+			color: chart1Color,
+			visible: false,
+			//type: "area", 
+			id: "c1Exit",
+			data: chartData1Exit,
+			showInLegend: false,
+			yAxis: 2,
+
+			marker: {
+			  symbol: 'square'
+			},
+
+			dataGrouping: {
+			  enabled: false
+			},
+
+  },
+
+		  {
+			name: "Terminal B Entry",
+			color: chart2Color,
+			visible: false,
+			//type: "area",
+			id: "c2Entry",
+			data: chartData2Entry,
+			showInLegend: false,
+			yAxis: 1,
+
+			marker: {
+			  symbol: 'diamond'
+			},
+
+			dataGrouping: {
+			  enabled: false
+			},
+
+  }, {
+			name: "Terminal B Exit",
+			color: chart2Color,
+			visible: false,
+			//type: "area",
+			id: "c2Exit",
+			data: chartData2Exit,
+			showInLegend: false,
+			yAxis: 2,
+
+			marker: {
+			  symbol: 'diamond'
+			},
+
+			dataGrouping: {
+			  enabled: false
+			},
+
+  },
+
+		  {
+			name: "Terminal E Entry",
+			color: chart3Color,
+			visible: false,
+			//type: "area",
+			id: "c3Entry",
+			data: chartData3Entry,
+			showInLegend: false,
+			yAxis: 1,
+
+			marker: {
+			  symbol: 'triangle'
+			},
+
+			dataGrouping: {
+			  enabled: false
+			},
+
+  }, {
+			name: "Terminal E Exit",
+			color: chart3Color,
+			visible: false,
+			//type: "area",
+			id: "c3Exit",
+			data: chartData3Exit,
+			showInLegend: false,
+			yAxis: 2,
+
+			marker: {
+			  symbol: 'triangle'
+			},
+
+			dataGrouping: {
+			  enabled: false
+			},
+
+  },
+
+		  {
+			name: "Economy lot Entry",
+			color: chart4Color,
+			visible: false,
+			//type: "area",
+			id: "c4Entry",
+			data: chartData4Entry,
+			showInLegend: false,
+			yAxis: 1,
+
+			marker: {
+			  symbol: 'triangle-down'
+			},
+
+			dataGrouping: {
+			  enabled: false
+			},
+
+  }, {
+			name: "Economy lot Exit",
+			color: chart4Color,
+			visible: false,
+			//type: "area",
+			id: "c4Exit",
+			data: chartData4Exit,
+			showInLegend: false,
+			yAxis: 2,
+
+			marker: {
+			  symbol: 'triangle-down'
+			},
+
+			dataGrouping: {
+			  enabled: false
+			},
+
+  },
+
+
+
+  ]
+
+	  },
+	  function (chart) { // on complete
+
+		chart.renderer.text('Occupancy', 15, 105)
+		.css({
+		  color: 'grey',
+		  fontSize: '16px'
+		})
+		  .add();
+
+		chart.renderer.text('Entry', 15, 510)
+		  .css({
+			color: 'grey',
+			fontSize: '16px'
+		  })
+		  .add();
+
+		chart.renderer.text('Exit', 15, 620)
+		  .css({
+			color: 'grey',
+			fontSize: '16px'
+		  })
+		  .add();
+
+	  }
+	);
+
+  }
+
+});
+
+</script>
