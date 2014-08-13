@@ -1,14 +1,11 @@
 package me.hzhou.paypal.config;
 
 
-import java.io.InputStream;
 
 import me.hzhou.paypal.controller.*;
 
 import com.jfinal.config.*;
 import com.jfinal.core.JFinal;
-import com.paypal.core.rest.PayPalRESTException;
-import com.paypal.core.rest.PayPalResource;
 
 
 public class MyConfig  extends JFinalConfig{
@@ -40,13 +37,8 @@ public class MyConfig  extends JFinalConfig{
 	 * Load SDK configuration for the resource.  
 	 */
 	public void afterJFinalStart(){
-		InputStream is = MyConfig.class.getResourceAsStream("/sdk_config.properties");
-		try {
-			PayPalResource.initConfig(is);
-		} catch (PayPalRESTException e) {
-			
-		}
-
+		AutoLoad.loadPayPalConfig();
+		AutoLoad.loadConfig();
 	}
 
 	/**

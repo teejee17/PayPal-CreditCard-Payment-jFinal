@@ -2,6 +2,7 @@ package me.hzhou.paypal.controller;
 
 import java.util.*;
 
+import me.hzhou.paypal.config.SystemVariables;
 import me.hzhou.paypal.util.GenerateAccessToken;
 
 import com.jfinal.core.Controller;
@@ -61,8 +62,7 @@ public class Crtl extends Controller {
 		// a `Payee` and `Amount` types
 		Transaction transaction = new Transaction();
 		transaction.setAmount(amount);
-		transaction
-				.setDescription("This is the payment transaction description.");
+		transaction.setDescription("This is the payment transaction description.");
 
 		// The Payment creation API requires a list of
 		// Transaction; add the created `Transaction`
@@ -139,5 +139,9 @@ public class Crtl extends Controller {
 		this.setAttr("request", Payment.getLastRequest());
 
 		renderJson();
+	}
+	
+	public void test() {
+		renderJson(SystemVariables.get("taxRate"));
 	}
 }
