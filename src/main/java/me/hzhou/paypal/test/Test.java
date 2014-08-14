@@ -28,7 +28,7 @@ public class Test {
 	}
 	
 	public static void main(String[] args) {
-
+		// check Card Type
 		System.out.println(Util.getCreditCardTypeByNumber("4888937088492170"));
 		System.out.println(Util.getCreditCardTypeByNumber("6011002303226740"));
 		System.out.println(Util.getCreditCardTypeByNumber("5474151327962392"));

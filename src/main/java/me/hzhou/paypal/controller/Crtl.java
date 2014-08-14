@@ -3,7 +3,8 @@ package me.hzhou.paypal.controller;
 import java.util.*;
 
 import me.hzhou.paypal.config.SystemVariables;
-import me.hzhou.paypal.util.GenerateAccessToken;
+import me.hzhou.paypal.model.PayPal;
+import me.hzhou.paypal.util.PayPaySecurity;
 
 import com.jfinal.core.Controller;
 import com.paypal.api.payments.*;
@@ -109,7 +110,7 @@ public class Crtl extends Controller {
 			// It is not mandatory to generate Access Token on a per call basis.
 			// Typically the access token can be generated once and
 			// reused within the expiry window
-			String accessToken = GenerateAccessToken.getAccessToken();
+			String accessToken = PayPaySecurity.getAccessToken();
 
 			// ### Api Context
 			// Pass in a `ApiContext` object to authenticate 
@@ -139,9 +140,5 @@ public class Crtl extends Controller {
 		this.setAttr("request", Payment.getLastRequest());
 
 		renderJson();
-	}
-	
-	public void test() {
-		renderJson(SystemVariables.get("taxRate"));
 	}
 }
