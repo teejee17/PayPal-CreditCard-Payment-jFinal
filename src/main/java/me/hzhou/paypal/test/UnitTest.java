@@ -22,6 +22,9 @@ public class UnitTest extends ControllerTestCase<MyConfig> {
 	public void paymentTest() {
 		PayPal paypal = new PayPal();
 		paypal.setBillAddress("7 WEST ST", "MALDEN", "US", "MA", "02148");
+		
+		// Never mind, this is a fake information about my card
+		// sorry
 		paypal.setCreditCard("4117704033495630", "visa", 11, 2017, "855", "Hao", "Zhou");
 		System.out.println(paypal.getCreditCard().toJSON());
 		paypal.setAmount(0.50);
