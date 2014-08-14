@@ -51,6 +51,14 @@ I provide a usage demo in [Unit test](src/main/java/me/hzhou/paypal/test/UnitTes
 Issues:
 ====
 1. You may not eligible for Accepting payments from customers directly using their credit cards on your web or mobile app in prodcution [Direct credit cards].
+```
+{
+	"name":"UNAUTHORIZED_PAYMENT",
+	"message":"Unauthorized payment",
+	"information_link":"https://developer.paypal.com/webapps/developer/docs/api/#UNAUTHORIZED_PAYMENT",
+	"debug_id":"XXXXXXXX"
+}
+```
 !["Direct credit cards"](docs/img/cannot_get_paid_by_CC.png "Direct credit cards")
 
 <h3>Contact me</h3>
