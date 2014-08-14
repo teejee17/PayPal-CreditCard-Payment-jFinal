@@ -20,7 +20,6 @@ public class AutoLoad {
 			JSONObject confObj = new JSONObject(configStr);
 			for(Object key : confObj.keySet()) {
 				String keyStr = key.toString();
-				System.out.println(keyStr);
 				SystemVariables.set(keyStr, confObj.get(keyStr));
 			}
 		} catch (IOException e) {
