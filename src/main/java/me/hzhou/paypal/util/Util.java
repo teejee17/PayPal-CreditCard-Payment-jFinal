@@ -2,6 +2,14 @@ package me.hzhou.paypal.util;
 
 public class Util {
 	
+	/**
+	 * Get credit card type by its number
+	 * PayPal supports visa, mastercard, discover, amex
+	 * https://developer.paypal.com/webapps/developer/docs/api/#store-a-credit-card
+	 * 
+	 * @param creditCardNumber
+	 * @return
+	 */
 	public static String getCreditCardTypeByNumber(String creditCardNumber) {
 		
 		String regVisa = "^4[0-9]{12}(?:[0-9]{3})?$";
@@ -19,7 +27,7 @@ public class Util {
         if (creditCardNumber.matches(regExpress))
             return "amex";
         if (creditCardNumber.matches(regDiners))
-            return "DINERS";
+            return "diner";
         if (creditCardNumber.matches(regDiscover))
             return "discover";
         if (creditCardNumber.matches(regJCB))
