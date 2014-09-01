@@ -8,15 +8,8 @@ This is a very simple demo[SDK] for PayPal with **Credit Card Payment Only**.
 2. Create an App in https://developer.paypal.com/, then you can get `REST API CREDENTIALS`    ![](docs/img/clientID.png)
 3. Update [`sdk_config.properties`](src/main/resources/sdk_config.properties)
 
-<h3>How to run?</h3>
-1. Import this project into your Eclipse
-2. Naviage to [`MyConfig.java`](src/main/java/me/hzhou/paypal/config/MyConfig.java)
-```
-public static void main(String[] args) {
-	JFinal.start("src/main/webapp", 80, "/", 5);
-}
-```	
-3. Run this as *Java Application*
+<h3>Support Credit Card Types</h3>
+must be visa, mastercard, amex, or discover
 
 <h3>Unit Test</h3>
 I provide a usage demo in [Unit test](src/main/java/me/hzhou/paypal/test/UnitTest.java)
