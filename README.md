@@ -13,14 +13,13 @@ must be visa, mastercard, amex, or discover
 
 <h3>Unit Test</h3>
 I provide a usage demo in [Unit test](src/main/java/me/hzhou/paypal/test/UnitTest.java)
-```
+```java
 	@Test
 	public void paymentTest() {
 		PayPal paypal = new PayPal();
 		paypal.setBillAddress("52 N Main ST", "Johnstown", "US", "OH", "43210");
 		
-		// Never mind, this is a fake information from PayPal Developer Center
-		// sorry
+		// this is a fake information from PayPal Developer Center
 		paypal.setCreditCard("4417119669820331", "visa", 11, 2018, "874", "Joe", "Shopper");
 		
 		// 1.50 doesn't include tax
@@ -40,11 +39,13 @@ I provide a usage demo in [Unit test](src/main/java/me/hzhou/paypal/test/UnitTes
 		
 	}
 ```
+
 !["Result"](docs/img/test_result.png "Result")
+
 Issues:
 ====
 1. You may not eligible for Accepting payments from customers directly using their credit cards on your web or mobile app in prodcution [Direct credit cards].
-```
+```json
 {
 	"name":"UNAUTHORIZED_PAYMENT",
 	"message":"Unauthorized payment",
